@@ -1,5 +1,7 @@
 from pathlib import Path
 from textwrap import dedent
+import io
+import traceback
 import typing as T
 
 test_input = dedent(
@@ -17,21 +19,24 @@ test_input = dedent(
 """
 )
 
+G = T.TypeVar("G")
+
 
 def uses_input(
-    func: T.Callable[[T.Generator[int, None, None]], int]
-) -> T.Callable[[], int]:
-    def inner() -> int:
-        with open(Path(__file__).parent / Path("input.txt")) as f:
-            # test input
-            # return func((int(line) for line in test_input.splitlines()))
-            return func((int(line) for line in f))
+    func: T.Callable[[io.TextIOWrapper], G],
+) -> T.Callable[[], G]:
+    def inner() -> G:
+        with open(
+            Path(traceback.extract_stack()[-2].filename).parent / Path("input.txt")
+        ) as f:
+            return func(f)
 
     return inner
 
 
 @uses_input
-def part_1(lines: T.Generator[int, None, None]) -> int:
+def part_1(IO: io.TextIOWrapper) -> int:
+    lines = (int(line) for line in IO)
     prev: int = next(lines)
     number_of_increases = 0
     for inpt in lines:
@@ -43,7 +48,8 @@ def part_1(lines: T.Generator[int, None, None]) -> int:
 
 
 @uses_input
-def part_2(lines: T.Generator[int, None, None]) -> int:
+def part_2(IO: io.TextIOWrapper) -> int:
+    lines = (int(line) for line in IO)
     # Test input, ignore at will
     # lines = get_input(test_input.splitlines())
     a, b, c = next(lines), next(lines), next(lines)
