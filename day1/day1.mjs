@@ -7,7 +7,10 @@ import { fileURLToPath } from "url";
 // See: https://bobbyhadz.com/blog/javascript-dirname-is-not-defined-in-es-module-scope
 // We have to pass the import.meta.url everytime as it depends on location the caller
 export const uses_input = (filename = import.meta.url) =>
-  fs.readFileSync(path.join(path.dirname(fileURLToPath(filename)), "input.txt"), "utf8");
+  fs.readFileSync(
+    path.join(path.dirname(fileURLToPath(filename)), "input.txt"),
+    "utf8"
+  );
 
 // eslint-disable-next-line no-unused-vars
 const test_input = `\
@@ -66,11 +69,11 @@ function part_2(text) {
 // if name == "main" nodejs ES6 equivalent
 // eslint-disable-next-line no-unused-vars
 if (import.meta.url === `file://${process.argv[1]}`) {
-    const text_input = uses_input();
-    console.log("-- Part 1 --");
-    console.log(part_1(text_input));
-    console.log("(one line)");
-    console.log(part_1_one_line(text_input));
-    console.log("-- Part 2 --");
-    console.log(part_2(text_input));
+  const text_input = uses_input();
+  console.log("-- Part 1 --");
+  console.log(part_1(text_input));
+  console.log("(one line)");
+  console.log(part_1_one_line(text_input));
+  console.log("-- Part 2 --");
+  console.log(part_2(text_input));
 }
